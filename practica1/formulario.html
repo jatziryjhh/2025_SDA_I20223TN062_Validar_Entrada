@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practica 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.43/libphonenumber-js.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
+</head>
+
+<body class="bg-light">
+    <!--razon social el nombre de la empresa puede tener diferentes variables-->
+    <!-- rfc de empresa (es diferente al personal)-->
+    <!-- telefono con validacion por lada (puede ser libreria de libphonenumber-->
+    <!-- contacto (nombre completo)-->
+    <!-- correo que sea valido -->
+    <!--boton de registro (solo se habilita si estan los  campos llenados) y se pone en rojo si ya se puede usar-->
+    <!--tiene que tener formato incorrecto o cosas asi para poder hacer la validacion de los campos,ejemplo si el rfc su formato es incorrecto abajo debera aparecer formato incorrecto en rojo-->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h1 class="text-center mb-4">Registro de Empresa</h1>
+                        <form id="registro">
+                            <div class="col-md-6">
+                                <label for="razon_social" class="form-label">Razon Social</label>
+                                <input type="text" class="form-control" id="razon_social" required>
+                                <div class="invalid-feedback">Formato incorrecto</div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="rfc" class="form-label">RFC</label>
+                                    <input type="text" class="form-control" id="rfc" required>
+                                    <div class="invalid-feedback">Formato incorrecto</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="telefono" class="form-label"> Telefono </label>
+                                    <input type="tel" class="form-control" id="telefono" required>
+                                    <div class="invalid-feedback">Código no valido (solo numeros)</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contacto" class="form-label">Contacto</label>
+                                <input type="text" class="form-control" id="contacto" required>
+                                <div class="invalid-feedback">Formato incorrecto</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="correo" class="form-label">Correo Electrónico</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="inputGroupPrepend3">@</span>
+                                    <input type="email" class="form-control" id="correo" required>
+                                    <div class="invalid-feedback">Formato incorrecto</div>
+                                </div>
+                            </div>
+                            <div class="mb-4 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-secondary" id="registrar"
+                                    disabled>Registrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = document.querySelectorAll('#registro input');
+            const boton = document.getElementById('registrar');
+            const telefonoInput = document.getElementById('telefono');
+            const telefonoError = telefonoInput.nextElementSibling; //obtener el div que esta abajo del input
+
+            const iti = window.intlTelInput(telefonoInput, {
+                initialCountry: 'mx',
+                separateDialCode: true,
+                utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js',
+            });
+
+            function validarRS(valor) {
+                return /^[\w\s.,&()-]+$/i.test(valor);
+            }
+
+            function validacionRFC(valor) {
+                return regex = /^[A-ZÑ&]{3,4}\d{6}[A-Z\d]{3}$/i.test(valor);
+            }
+
+            function validacionTelefono(valor) {
+                const regexTelefono = /^\d{10}$/;;
+                const isValid = regexTelefono.test(valor);
+                if (!isValid) {
+                    telefonoError.textContent = 'Código no valido (solo numeros)';
+                    telefonoInput.classList.add('is-invalid');
+                    telefonoInput.classList.remove('is-valid');
+                    telefonoError.style.display = 'block';
+                } else {
+                    telefonoError.textContent = '';
+                    telefonoInput.classList.remove('is-invalid');
+                    telefonoInput.classList.add('is-valid');
+                    telefonoError.style.display = 'none';
+                }
+                return isValid;
+            }
+
+            function validacionContacto(valor) {
+                return /^[a-zA-ZÀ-ÿ\s]+$/.test(valor);
+            }
+
+            function validacionCorreo(valor) {
+                return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(valor);
+            }
+
+            function validacionCampo(input, validacion) {
+                if (!validacion(input.value)) {
+                    input.classList.add('is-invalid');
+                    input.classList.remove('is-valid');
+                } else {
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                }
+                validarBoton();
+            }
+
+            function validarBoton() {
+                const todosValidos = Array.from(inputs).every(input => {
+                    // Verificar solo si el teléfono es válido también
+                    if (input.id === 'telefono') {
+                        return validacionTelefono(input.value);
+                    }
+                    return input.classList.contains('is-valid');
+                });
+
+                if (todosValidos) {
+                    boton.disabled = false;
+                    boton.classList.remove('btn-secondary');
+                    boton.classList.add('btn-danger');
+                } else {
+                    boton.disabled = true;
+                    boton.classList.remove('btn-danger');
+                    boton.classList.add('btn-secondary');
+                }
+            }
+
+            function mostrarAlerta() {
+                if (boton.disabled) {
+                    alert('EL formulario no se ha llenado correctamente');
+                }
+            }
+
+            document.getElementById('registro').addEventListener('submit', function (event) {
+                if (boton.disabled) {
+                    event.preventDefault();
+                    mostrarAlerta();
+                } else {
+                    alert('Registro exitoso');
+                }
+            });
+
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    if (input.id === 'razon_social') validacionCampo(input, validarRS);
+                    if (input.id === 'rfc') validacionCampo(input, validacionRFC);
+                    if (input.id === 'telefono') validacionCampo(input, validacionTelefono);
+                    if (input.id === 'contacto') validacionCampo(input, validacionContacto);
+                    if (input.id === 'correo') validacionCampo(input, validacionCorreo);
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>
