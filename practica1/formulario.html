@@ -25,12 +25,12 @@
                     <div class="card-body">
                         <h1 class="text-center mb-4">Registro de Empresa</h1>
                         <form id="registro">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label for="razon_social" class="form-label">Razon Social</label>
                                 <input type="text" class="form-control" id="razon_social" required>
                                 <div class="invalid-feedback">Formato incorrecto</div>
                             </div>
-                            <div class="row mb-3">
+                            <div class="row mb-6">
                                 <div class="col-md-6">
                                     <label for="rfc" class="form-label">RFC</label>
                                     <input type="text" class="form-control" id="rfc" required>
@@ -42,12 +42,12 @@
                                     <div class="invalid-feedback">Código no valido (solo numeros)</div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label for="contacto" class="form-label">Contacto</label>
                                 <input type="text" class="form-control" id="contacto" required>
                                 <div class="invalid-feedback">Formato incorrecto</div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label for="correo" class="form-label">Correo Electrónico</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="inputGroupPrepend3">@</span>
@@ -55,9 +55,11 @@
                                     <div class="invalid-feedback">Formato incorrecto</div>
                                 </div>
                             </div>
-                            <div class="mb-4 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-secondary" id="registrar"
-                                    disabled>Registrar</button>
+                            <div class="row mt-4">
+                                <div class="mb-4 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-secondary" id="registrar"
+                                        disabled>Registrar</button>
+                                </div>
                             </div>
                         </form>
                     </div>
